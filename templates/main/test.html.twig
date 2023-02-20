@@ -9,5 +9,18 @@
 </head>
 <body>
     <h1>Test !</h1>
+    {# création de variable #}
+    {% set name = "Sandra" %}
+    {# ~ est le symbôle de concaténation #}
+    <h2>Hello {{ name ~ " " ~ name}} !</h2>
+
+    {# création d'un tableau #}
+    {% set colors = ['red', 'purple', 'green', 'yellow'] %}
+    {# boucler sur un tableau #}
+    {% for c in colors %}
+        <div style="background-color: {{ c }}">{{ c }}</div>
+    {% endfor %}
+
+
 </body>
 </html>
