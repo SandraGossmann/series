@@ -1,3 +1,3 @@
-#index:
-#    path: /
-#    controller: App\Controller\DefaultController::index
+#main_truc:
+#    path: /truc
+#    controller: App\Controller\MainController::truc
