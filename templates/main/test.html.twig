@@ -1,13 +1,6 @@
-<!doctype html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport"
-          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-</head>
-<body>
+{% extends 'base.html.twig' %}
+
+{% block body %}
 <h1>Test !</h1>
 {# création de variable #}
 {% set name = "Sandra" %}
@@ -37,6 +30,7 @@
 {% endfor %}
 
 {# manipulation d'objets #}
+<h1>OBJETS</h1>
 {% set serie =
     {
     title : "lotr",
@@ -50,5 +44,12 @@
     <div>{{ key }} : {{ val }}</div>
 {% endfor %}
 
-</body>
-</html>
+{# les filtres #}
+<h1>FILTRES</h1>
+<div>{{ name | upper | lower | capitalize }} : {{ name | length }} lettres</div>
+<div>{{ colors | join("-") }}</div>
+<div>{{ "now" | date('d/m/Y H:i') }}</div>
+
+
+{% endblock %}
+{% block title %} {{ parent() }} | Test{% endblock %}
