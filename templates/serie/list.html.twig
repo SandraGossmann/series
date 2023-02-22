@@ -2,10 +2,15 @@
 
 {% block body %}
     <h2>Series List</h2>
-
-    {% for serie in series %}
-        <p>{{ serie.name }}</p>
-    {% endfor %}
+    <section class="series-list">
+        {% for serie in series  %}
+            <article>
+                <a href="{{ path('serie_show', {'id': serie.id}) }}">
+                    <img src="{{ asset('img/posters/series/' ~ serie.poster) }}" alt="{{ serie.name }}">
+                </a>
+            </article>
+        {% endfor %}
+    </section>
 {% endblock %}
 
 {% block title %}
