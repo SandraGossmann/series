@@ -10,8 +10,11 @@ use Doctrine\Persistence\ManagerRegistry;
  * @extends ServiceEntityRepository<Serie>
  *
  * @method Serie|null find($id, $lockMode = null, $lockVersion = null)
+ * //criteria tableau de clauses where
  * @method Serie|null findOneBy(array $criteria, array $orderBy = null)
  * @method Serie[]    findAll()
+ * //limit nb de lignes à récupérer
+ * //offset no auquel on commence
  * @method Serie[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class SerieRepository extends ServiceEntityRepository

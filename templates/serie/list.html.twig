@@ -2,6 +2,10 @@
 
 {% block body %}
     <h2>Series List</h2>
+
+    {% for serie in series %}
+        <p>{{ serie.name }}</p>
+    {% endfor %}
 {% endblock %}
 
 {% block title %}
