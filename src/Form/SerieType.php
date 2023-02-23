@@ -18,7 +18,12 @@ class SerieType extends AbstractType
     {
         $builder
             ->add('name', TextType::class)
-            ->add('overview', TextareaType::class, ['required' => false])
+            ->add('overview', TextareaType::class, [
+                'required' => false,
+                'attr'=>[
+                    'class' => 'row'
+                ]
+            ])
             ->add('status', ChoiceType::class,
                 ["choices" =>
                     ["Canceled" => "canceled",
@@ -36,8 +41,16 @@ class SerieType extends AbstractType
                         "Comedy" => "comedy",
                         "Drama" => "drama"
                     ]])
-            ->add('firstAirDate', DateType::class, ['label' => 'First air date : '])
-            ->add('lastAirDate', DateType::class, ['label' => 'Last air date : '])
+            ->add('firstAirDate', DateType::class, [
+                'label' => 'First air date : ',
+                'html5' => true,
+                'widget' => 'single_text'
+                ])
+            ->add('lastAirDate', DateType::class, [
+                'label' => 'Last air date : ',
+                'html5' => true,
+                'widget' => 'single_text'
+            ])
             ->add('backdrop')
             ->add('poster')
             ->add('tmdbId')

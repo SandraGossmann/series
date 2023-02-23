@@ -3,9 +3,11 @@
 namespace App\Controller;
 
 use App\Entity\Serie;
+use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Constraints\DateTime;
@@ -41,54 +43,25 @@ class SerieController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
-    public function add(SerieRepository $serieRepository, EntityManagerInterface $entityManager): Response
+    public function add(SerieRepository $serieRepository, Request $request): Response
     {
         $serie = new Serie();
+        $serieForm = $this->createForm(SerieType::class, $serie);
+        //méthode qui extrait les infos de la requête et hydrate l'objet $serie
+        $serieForm->handleRequest($request);
 
-//        //on sette les infos de la série
-//        $serie->setName("The Office")
-//                ->setBackdrop("backdrop.png")
-//                ->setDateCreated(new \DateTime())
-//                ->setGenres("Comedy")
-//                ->setFirstAirDate(new \DateTime('2022-02-02'))
-//                ->setLastAirDate(new \DateTime("-6 month"))
-//                ->setPopularity(850.52)
-//                ->setPoster("poster.png")
-//                ->setTmdbId(123456)
-//                ->setVote(8.5)
-//                ->setStatus("Ended");
-//        dump($serie);
-//
-//        //enregistrement de la série en bdd
-//        $serieRepository->save($serie);
-//        dump($serie);
-//
-//        $serie->setName("The last of us");
-//        $serieRepository->save($serie, true);
-//        dump($serie);
-        $serie2 = new Serie();
-        $serie2->setName("Le magicien")
-            ->setBackdrop("backdrop.png")
-            ->setDateCreated(new \DateTime())
-            ->setGenres("Comedy")
-            ->setFirstAirDate(new \DateTime('2022-02-02'))
-            ->setLastAirDate(new \DateTime("-6 month"))
-            ->setPopularity(850.52)
-            ->setPoster("poster.png")
-            ->setTmdbId(123456)
-            ->setVote(8.5)
-            ->setStatus("Ended");
+        if ($serieForm->isSubmitted()){
+            //on sette manuellement la date de création
+            //ajout d'un prepersist dans serie qui sette la date now
+            //$serie->setDateCreated(new \DateTime());
 
+            //suvegarde en bdd de la série
+            $serieRepository->save($serie, true);
+            $this->addFlash("success", "Serie added !");
+            return $this->redirectToRoute('serie_show', ['id' => $serie->getId()]);
+        }
 
-        //utilisation de EntityManagerInterface
-        $entityManager->persist($serie2);
-        $entityManager->flush();
-
-        $serieRepository->remove($serie2, true);
-        dump($serie2);
-
-        //TODO créer un formulaire d'ajout de série
-        return $this->render('serie/add.html.twig');
+        return $this->render('serie/add.html.twig', ['serieForm' => $serieForm->createView()]);
     }
 
 #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]

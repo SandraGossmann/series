@@ -6,5 +6,19 @@
 
 {% block body %}
     <h2>Add a new serie</h2>
+    {# début du form #}
+    {{ form_start(serieForm) }}
+
+    <div class="machin">
+        {# découpage par champ name #}
+        {{ form_label(serieForm.name) }}
+        {{ form_widget(serieForm.name) }}
+        {{ form_errors(serieForm.name) }}
+    </div>
+    {# affichage du reste du form  #}
+    {{ form_rest(serieForm) }}
+    <button>Add !</button>
+    {# fin du formulaire #}
+    {{ form_end(serieForm) }}
 {% endblock %}
 
