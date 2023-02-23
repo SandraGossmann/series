@@ -23,14 +23,21 @@ class SerieController extends AbstractController
         //$series = $serieRepository->findBy(["status" => "ended"], ["popularity" => 'DESC'], 10);
 
         //récupération des 50 series les mieux notées
-        $series =$serieRepository->findBy([], ["vote" => "DESC"], 50);
+        //$series =$serieRepository->findBy([], ["vote" => "DESC"], 56);
 
-        dump($series);
+        //dump($series);
+
+        //méthode magique findByNomAttribut
+        //$series2 = $serieRepository->findByStatus("ended");
+
+        $series = $serieRepository->findBestSeries();
 
         return $this->render('serie/list.html.twig', [
             //on envoie les données à la vue
             'series' => $series
         ]);
+
+
     }
 
     #[Route('/add', name: 'add')]
@@ -84,12 +91,23 @@ class SerieController extends AbstractController
         return $this->render('serie/add.html.twig');
     }
 
-    #[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]
+#[Route('/{id}', name: 'show', requirements: ['id' => '\d+'])]
+
     public function show(int $id, SerieRepository $serieRepository): Response
     {
         $serie = $serieRepository->find($id);
-
+        if(!$serie){
+            //lance une erreur 404 si la série n'existe pas en bdd
+            throw $this->createNotFoundException("Oops ! Serie not found !");
+        }
         return $this->render('serie/show.html.twig', ["serie" => $serie]);
     }
+//    #[Route('/{serie}', name: 'show', requirements: ['serie' => '\d+'])]
+//    //Typer la variable comme un type entite appelle automatiquement la methode find
+//    //en passant l'id il va directement chercher l'objet Serie correspondant
+//    public function show(Serie $serie, SerieRepository $serieRepository): Response
+//    {
+//        return $this->render('serie/show.html.twig', ["serie" => $serie]);
+//    }
 
 }
