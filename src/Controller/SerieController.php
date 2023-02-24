@@ -50,7 +50,7 @@ class SerieController extends AbstractController
         //méthode qui extrait les infos de la requête et hydrate l'objet $serie
         $serieForm->handleRequest($request);
 
-        if ($serieForm->isSubmitted()){
+        if ($serieForm->isSubmitted() && $serieForm->isValid()){
             //on sette manuellement la date de création
             //ajout d'un prepersist dans serie qui sette la date now
             //$serie->setDateCreated(new \DateTime());
