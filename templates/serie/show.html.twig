@@ -14,7 +14,8 @@
             <div>Aired from {{ serie.firstAirDate | date('Y-m-d') }} to {{ serie.lastAirDate | date('Y-m-d') }}</div>
             <div>{{ serie.overview | nl2br }}</div>
             <div class="flex-div">
-                <a class="link_button" href="{{ path('serie_remove', {'id': serie.id}) }}">Delete</a>
+                <a class="link_button" href="{{ path('serie_remove', {'id': serie.id}) }}"
+                   onclick="return confirm('Are you sure to delete this serie : {{ serie.name }} ?')">Delete</a>
             </div>
             <section class="seasons">
                 <h3>Seasons :</h3>
