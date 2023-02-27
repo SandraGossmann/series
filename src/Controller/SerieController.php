@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints\DateTime;
 #[Route('/serie', name: 'serie_')]
 class SerieController extends AbstractController
 {
-    #[Route('/list', name: 'list')]
-    public function list(SerieRepository $serieRepository): Response
+    #[Route('/list/{page}', name: 'list', requirements: ['page'=>'\d+'], methods: 'GET')]
+    public function list(SerieRepository $serieRepository, int $page = 1): Response
     {
         //on récupère toutes les series en passant par le repository
         //$series = $serieRepository->findAll();
@@ -32,11 +32,20 @@ class SerieController extends AbstractController
         //méthode magique findByNomAttribut
         //$series2 = $serieRepository->findByStatus("ended");
 
-        $series = $serieRepository->findBestSeries();
+        $nbSeriesTotal = $serieRepository->count([]);
+        //ceil arrondit à l'entier supérieur
+        $nbPagesMax = ceil($nbSeriesTotal / SerieRepository::SERIE_LIMITE);
+
+        if($page >= 1 && $page <= $nbPagesMax){
+            $series = $serieRepository->findBestSeries($page);
+        } else throw $this->createNotFoundException("Oops, page not found");
+
 
         return $this->render('serie/list.html.twig', [
             //on envoie les données à la vue
-            'series' => $series
+            'series' => $series,
+            'currentPage' => $page,
+            'maxPage' => $nbPagesMax,
         ]);
 
 
