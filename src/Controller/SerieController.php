@@ -92,4 +92,18 @@ class SerieController extends AbstractController
 //        return $this->render('serie/show.html.twig', ["serie" => $serie]);
 //    }
 
+#[Route('/remove/{id}', name: 'remove', requirements: ['id' => '\d+'])]
+    public function remove(SerieRepository $serieRepository, int $id){
+        //récupération de la série
+        $serie = $serieRepository->find($id);
+        if($serie){
+            //suppression de la série
+            $serieRepository->remove($serie, true);
+            $this->addFlash("warning", "Serie Deleted !");
+        } else {
+            $this->createNotFoundException("This serie can't be deleted !");
+        }
+        return $this->redirectToRoute('serie_list');
+    }
+
 }
