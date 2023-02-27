@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SerieType extends AbstractType
 {
@@ -52,7 +53,13 @@ class SerieType extends AbstractType
                 'widget' => 'single_text'
             ])
             ->add('backdrop')
-            ->add('poster')
+            ->add('poster', FileType::class, [
+                //le champ ne doit pas être mappé et permet de rajouter des champs sans lien avec l'entité
+                'mapped' => false,
+                'constraints' => [
+                    new NotBlank()
+                ]
+            ])
             ->add('tmdbId')
         ;
     }

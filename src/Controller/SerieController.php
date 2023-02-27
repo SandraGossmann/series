@@ -7,6 +7,7 @@ use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -63,6 +64,20 @@ class SerieController extends AbstractController
             //on sette manuellement la date de création
             //ajout d'un prepersist dans serie qui sette la date now
             //$serie->setDateCreated(new \DateTime());
+
+            //on type $file pour pouvoir utiliser les méthodes + facilement (autocomplétion)
+            /**
+             * @var UploadedFile $file
+             */
+            //on demande d'extraire une info du formulaire, upload photo
+            $file = $serieForm->get('poster')->getData();
+            //on renomme le fichier -- uniqid génère un nombre aleatoire basé sur le timestamp
+            //guessExtension récupère le type de fichier qqsoit son extension
+            $newFileName = $serie->getName()."-".uniqid().".".$file->guessExtension();
+            //on déplace le fichier pour le sauvegarder; 1er param=directory, 2e param=nom
+            $file->move('img/posters/series', $newFileName);
+            //on sette l'attribut poster avec le nouveau nom
+            $serie->setPoster($newFileName);
 
             //suvegarde en bdd de la série
             $serieRepository->save($serie, true);
