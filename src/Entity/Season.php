@@ -5,8 +5,10 @@ namespace App\Entity;
 use App\Repository\SeasonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Season
 {
     #[ORM\Id]
@@ -15,18 +17,26 @@ class Season
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Provide a season's number")]
+    #[Assert\Positive(message: "The season's number must be greater than 0")]
     private ?int $number = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
+    #[Assert\NotBlank(message: "Provide a first air date")]
     private ?\DateTimeInterface $firstAirDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $overview = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\Length(
+        max: 255,
+        maxMessage: "Maximum {{limit}} characters please !")]
     private ?string $poster = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: "Provide a tmbd ID !")]
+    #[Assert\Positive(message: "The tmbd Id must be greater than 0")]
     private ?int $tmdbId = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
@@ -138,5 +148,10 @@ class Season
         $this->serie = $serie;
 
         return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function setNewSeason(){
+        $this->setDateCreated(new \DateTime());
     }
 }
