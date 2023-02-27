@@ -4,6 +4,7 @@ namespace App\Repository;
 
 use App\Entity\Serie;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -49,13 +50,17 @@ class SerieRepository extends ServiceEntityRepository
         $offset = ($page - 1) * self::SERIE_LIMITE;
         //En QueryBuilder
         $qb = $this->createQueryBuilder('s');
-        $qb ->addOrderBy('s.popularity', 'DESC')
+        $qb
+            ->leftJoin('s.seasons', 'sea')
+            ->addSelect('sea')
+            ->addOrderBy('s.popularity', 'DESC')
 //            ->andWhere('s.vote > 8')
 //            ->andWhere('s.popularity > 100')
             ->setFirstResult($offset)
             ->setMaxResults(self::SERIE_LIMITE);
         $query = $qb->getQuery();
-        return $query->getResult();
+        $paginator = new Paginator($query);
+        return $paginator;
     }
 }
 //En DQL find bestSeries
