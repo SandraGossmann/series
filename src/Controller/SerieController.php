@@ -6,6 +6,7 @@ use App\Entity\Serie;
 use App\Form\SerieType;
 use App\Repository\SerieRepository;
 use Doctrine\ORM\EntityManagerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +54,11 @@ class SerieController extends AbstractController
     }
 
     #[Route('/add', name: 'add')]
+    #[IsGranted("ROLE_USER")]
     public function add(SerieRepository $serieRepository, Request $request): Response
     {
+        //renvoie une 403
+        //$this->createAccessDeniedException();
         $serie = new Serie();
         $serieForm = $this->createForm(SerieType::class, $serie);
         //méthode qui extrait les infos de la requête et hydrate l'objet $serie

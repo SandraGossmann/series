@@ -11,6 +11,7 @@ use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Image;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class SerieType extends AbstractType
@@ -57,7 +58,11 @@ class SerieType extends AbstractType
                 //le champ ne doit pas être mappé et permet de rajouter des champs sans lien avec l'entité
                 'mapped' => false,
                 'constraints' => [
-                    new NotBlank()
+                    new Image([
+                        "maxSize" => '5000k',
+                        "mimeTypesMessage" => "Image format not allowed !",
+
+                    ])
                 ]
             ])
             ->add('tmdbId')
