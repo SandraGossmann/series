@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\Entity\Serie;
 use App\Form\SerieType;
 use App\Repository\SerieRepository;
+use App\Services\Uploader;
 use Doctrine\ORM\EntityManagerInterface;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -55,7 +56,7 @@ class SerieController extends AbstractController
 
     #[Route('/add', name: 'add')]
     #[IsGranted("ROLE_USER")]
-    public function add(SerieRepository $serieRepository, Request $request): Response
+    public function add(SerieRepository $serieRepository, Request $request, Uploader $uploader): Response
     {
         //renvoie une 403
         //$this->createAccessDeniedException();
@@ -75,11 +76,11 @@ class SerieController extends AbstractController
              */
             //on demande d'extraire une info du formulaire, upload photo
             $file = $serieForm->get('poster')->getData();
-            //on renomme le fichier -- uniqid génère un nombre aleatoire basé sur le timestamp
-            //guessExtension récupère le type de fichier qqsoit son extension
-            $newFileName = $serie->getName()."-".uniqid().".".$file->guessExtension();
-            //on déplace le fichier pour le sauvegarder; 1er param=directory, 2e param=nom
-            $file->move('img/posters/series', $newFileName);
+
+            $newFileName = $uploader->upload($file,
+                                            $this->getParameter('upload_serie_poster'),
+                                            $serie->getName());
+
             //on sette l'attribut poster avec le nouveau nom
             $serie->setPoster($newFileName);
 
