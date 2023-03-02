@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SerieRepository::class)]
@@ -16,6 +17,7 @@ class Serie
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("serie_api")]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -25,42 +27,51 @@ class Serie
         max: 255,
         minMessage: "Minimum {{limit}} characters please !",
         maxMessage: "Maximum {{limit}} characters please !")]
+    #[Groups("serie_api")]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     #[Assert\Length(
         max: 3000,
         maxMessage: "Maximum {{limit}} characters please !")]
+    #[Groups("serie_api")]
     private ?string $overview = null;
 
     #[ORM\Column(length: 50)]
     #[Assert\Choice(["ended", "canceled", "returning"])]
+    #[Groups("serie_api")]
     private ?string $status = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 3, scale: 1)]
     #[Assert\Range(notInRangeMessage: "Vote out of bound !", min: 0, max: 10)]
+    #[Groups("serie_api")]
     private ?string $vote = null;
 
     #[ORM\Column(type: Types::DECIMAL, precision: 6, scale: 2)]
+    #[Groups("serie_api")]
     private ?string $popularity = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("serie_api")]
     private ?string $genres = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "Please provide a first air date for the serie !")]
     #[Assert\LessThanOrEqual(propertyPath: "lastAirDate", message: "This date must be less than first air date")]
+    #[Groups("serie_api")]
     private ?\DateTimeInterface $firstAirDate = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "Please provide a last air date for the serie !")]
     #[Assert\GreaterThanOrEqual(propertyPath: "firstAirDate", message: "This date must be greater than first air date")]
+    #[Groups("serie_api")]
     private ?\DateTimeInterface $lastAirDate = null;
 
     #[ORM\Column(length: 255)]
     private ?string $backdrop = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups("serie_api")]
     private ?string $poster = null;
 
     #[ORM\Column]
@@ -73,6 +84,7 @@ class Serie
     private ?\DateTimeInterface $dateModified = null;
 
     #[ORM\OneToMany(mappedBy: 'serie', targetEntity: Season::class, cascade: ["remove", "persist"])]
+    #[Groups("serie_api")]
     private Collection $seasons;
 
     public function __construct()

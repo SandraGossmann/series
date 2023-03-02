@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\SeasonRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
@@ -14,24 +15,29 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups("serie_api")]
     private ?int $id = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: "Provide a season's number")]
     #[Assert\Positive(message: "The season's number must be greater than 0")]
+    #[Groups("serie_api")]
     private ?int $number = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE)]
     #[Assert\NotBlank(message: "Provide a first air date")]
+    #[Groups("serie_api")]
     private ?\DateTimeInterface $firstAirDate = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
+    #[Groups("serie_api")]
     private ?string $overview = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\Length(
         max: 255,
         maxMessage: "Maximum {{limit}} characters please !")]
+    #[Groups("serie_api")]
     private ?string $poster = null;
 
     #[ORM\Column]
