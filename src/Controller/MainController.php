@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Services\CallApiServices;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -22,8 +23,10 @@ class MainController extends AbstractController
     /**
      * @Route("/test", name="main_test")
      */
-    public function test(): Response
+    public function test(CallApiServices $api): Response
     {
+        $communes = $api->getCities();
+        dd($communes);
         return $this->render('main/test.html.twig');
     }
 
